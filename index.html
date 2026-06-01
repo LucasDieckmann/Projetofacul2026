@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENAI - Gestão de Certificados</title>
+    <meta name="description" content="Sistema de Gestão de Certificados de Treinamentos de Segurança do Trabalho">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <div class="logo-icon"><span>S</span></div>
+                <div class="logo-text">
+                    <h2>SENAI</h2>
+                    <p>Nova Mutum - MT</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <button class="menu-item active" data-section="cadastro">
+                <span>📋</span> <span>Cadastrar Treinamento</span>
+            </button>
+            <button class="menu-item" data-section="certificados">
+                <span>📜</span> <span>Certificados Emitidos</span>
+            </button>
+            <button class="menu-item" data-section="participantes">
+                <span>👥</span> <span>Participantes</span>
+            </button>
+            <button class="menu-item" data-section="relatorios">
+                <span>📊</span> <span>Relatórios</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="avatar">A</div>
+                <div class="user-info">
+                    <strong>Administrador</strong>
+                    <small>Gestor de Certificados</small>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+        <header class="main-header">
+            <div>
+                <h1>Gestão de Certificados</h1>
+                <p>Sistema para emissão e controle de certificados de treinamentos de segurança do trabalho</p>
+            </div>
+            <div class="header-date">
+                <span id="currentDate"></span>
+            </div>
+        </header>
+
+        <!-- SEÇÃO CADASTRO -->
+        <section id="cadastro" class="content-section">
+            <div class="stats-container" id="statsContainer"></div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Novo Treinamento</h2>
+                    <span class="badge">SAGA SENAI 2026</span>
+                </div>
+                <form id="trainingForm">
+                    <div class="form-grid">
+                        <div>
+                            <h3>Informações do Treinamento</h3>
+                            <div class="form-group">
+                                <label for="courseType">Tipo de Treinamento</label>
+                                <select id="courseType" class="custom-select">
+                                    <option value="NR-10">NR-10 - Segurança em Instalações Elétricas</option>
+                                    <option value="NR-35">NR-35 - Trabalho em Altura</option>
+                                    <option value="NR-18">NR-18 - Construção Civil</option>
+                                    <option value="NR-33">NR-33 - Espaço Confinado</option>
+                                    <option value="NR-12">NR-12 - Segurança em Máquinas</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="courseDate">Data de Realização</label>
+                                <input type="date" id="courseDate" class="custom-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="instructor">Instrutor Responsável</label>
+                                <input type="text" id="instructor" class="custom-input" placeholder="Nome completo do instrutor">
+                            </div>
+                            <div class="form-group">
+                                <label for="workload">Carga Horária (Horas)</label>
+                                <input type="number" id="workload" class="custom-input" placeholder="Ex: 8, 16, 40">
+                            </div>
+                            <div class="form-group">
+                                <label for="programContent">Conteúdo Programático</label>
+                                <textarea id="programContent" class="custom-textarea" placeholder="Descreva o conteúdo programático"></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Participantes</h3>
+                            <div class="info-box">
+                                Digite um participante por linha: <strong>Nome Completo, CPF</strong><br>
+                                Exemplo:<br> João da Silva, 12345678909<br> Maria Santos, 98765432100
+                            </div>
+                            <div class="form-group">
+                                <label for="participantsList">Lista de Participantes</label>
+                                <textarea id="participantsList" class="participants-area" placeholder="Digite um participante por linha"></textarea>
+                            </div>
+                            <div class="tips-box">💡 Dica: copie diretamente do Excel e cole aqui.</div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="clearForm()">Limpar</button>
+                        <button type="button" class="btn btn-primary" onclick="generateCertificates()">Gerar Certificados</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- SEÇÃO CERTIFICADOS -->
+        <section id="certificados" class="content-section hidden">
+            <div class="page-title">
+                <h2>Certificados Emitidos</h2>
+                <button class="btn btn-primary" onclick="showSection('cadastro')">Novo Treinamento</button>
+            </div>
+            <div class="search-container">
+                <input type="text" id="searchCert" placeholder="Buscar por nome, CPF ou treinamento..." onkeyup="filterCertificates()">
+            </div>
+            <div id="certContainer" class="cert-grid"></div>
+        </section>
+
+        <!-- SEÇÃO PARTICIPANTES -->
+        <section id="participantes" class="content-section hidden">
+            <div class="page-title">
+                <h2>Lista de Participantes</h2>
+                <div class="search-container" style="width: 300px;">
+                    <input type="text" id="searchParticipante" placeholder="Buscar participante..." onkeyup="filterParticipantes()">
+                </div>
+            </div>
+            <div id="participantesContainer" class="cert-grid"></div>
+        </section>
+
+        <!-- SEÇÃO RELATÓRIOS -->
+        <section id="relatorios" class="content-section hidden">
+            <div class="page-title"><h2>Relatórios Gerenciais</h2></div>
+            <div class="stats-container" id="relatorioStats"></div>
+            <div class="card">
+                <h3>Resumo Executivo</h3>
+                <p id="resumoTexto">Carregando...</p>
+                <hr style="margin: 20px 0;">
+                <button class="btn btn-primary" onclick="exportarRelatorio()">📥 Exportar Relatório (JSON)</button>
+                <button class="btn btn-secondary" onclick="backupBanco()" style="margin-left: 10px;">💾 Backup Completo</button>
+                <button class="btn btn-danger" onclick="resetSistema()" style="margin-left: 10px;">⚠️ Resetar Sistema</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL -->
+    <div id="certificateModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Visualização do Certificado</h2>
+                <button class="close-btn" onclick="closeCertificateModal()">✖</button>
+            </div>
+            <div id="certificatePreview"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 SENAI Nova Mutum - Sistema de Gestão de Certificados</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script src="db.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
